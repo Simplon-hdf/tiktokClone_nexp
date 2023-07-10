@@ -30,7 +30,7 @@ class Video(Base):
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, server_onupdate=func.now())
-    id_1 = Column(Integer, ForeignKey('user.id'), nullable=False)
+    idUser = Column(Integer, ForeignKey('user.id'), nullable=False)
     
 class Commentaire(Base):
     __tablename__ = "commentaire"
@@ -38,8 +38,8 @@ class Commentaire(Base):
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, server_onupdate=func.now())
-    id_1 = Column(Integer, ForeignKey('video.id'), nullable=False)
-    id_2 = Column(Integer, ForeignKey('user.id'), nullable=False)
+    idVideo = Column(Integer, ForeignKey('video.id'), nullable=False)
+    idUser = Column(Integer, ForeignKey('user.id'), nullable=False)
     
 class Tags(Base):
     __tablename__ = "tags"
@@ -48,20 +48,19 @@ class Tags(Base):
 
 class Aime(Base):
     __tablename__ = "aime"
-    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    id_1 = Column(Integer, ForeignKey('video.id'), primary_key=True)    
+    id = Column(Integer, primary_key=True, index=True)
+    idUser = Column(Integer, ForeignKey('user.id'))
+    idVideo = Column(Integer, ForeignKey('video.id'))    
     
 
 class View(Base):
     __tablename__ = "view"
-    id = Column(Integer, primary_key=True, index=True)    
-    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    id_1 = Column(Integer, ForeignKey('video.id'), primary_key=True)    
+    id = Column(Integer, primary_key=True, index=True)
+    idUser = Column(Integer, ForeignKey('user.id'))
+    idVideo = Column(Integer, ForeignKey('video.id'))     
 
 class Contient(Base):
     __tablename__ = "contient"
-    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    id_1 = Column(Integer, ForeignKey('video.id'), primary_key=True)    
-
-
-
+    id = Column(Integer, primary_key=True, index=True)
+    idTag = Column(Integer, ForeignKey('tags.id'))
+    idVideo = Column(Integer, ForeignKey('video.id'))   
