@@ -1,11 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Date, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Configurez la base de données
-SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./bdd.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -13,11 +13,47 @@ Base = declarative_base()
 
 # Définissez le modèle de données pour le compte utilisateur
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True)
-    password = Column(String)
+    email = Column(Text, nullable=False, unique=True)
+    pseudo = Column(Text, unique=True)
+    password = Column(Text, nullable=False)
+    created_at = Column(Date)
+    updated_at = Column(Date)
 
+class Video(Base):
+    __tablename__ = "video"
+    id = Column(Integer, primary_key=True, index=True)
+    url = Column(Text, nullable=False, unique=True)
+    title = Column(Text, unique=True)
+    description = Column(Text)
+    created_at = Column(Date)
+    updated_at = Column(Date)
+    
+class Commentaire(Base):
+    __tablename__ = "commentaire"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text)
+    created_at = Column(Date)
+    updated_at = Column(Date)
+    
+class Tags(Base):
+    __tablename__ = "tags"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(Text)
+
+class Aime(Base):
+    __tablename__ = "aime"
+    id = Column(Integer, primary_key=True, index=True)    
+
+class View(Base):
+    __tablename__ = "view"
+    id = Column(Integer, primary_key=True, index=True)    
+
+class Contient(Base):
+    __tablename__ = "contient"
+    id = Column(Integer, primary_key=True, index=True)    
+    
 
 # Créez la table dans la base de données
 Base.metadata.create_all(bind=engine)
