@@ -20,7 +20,7 @@ class User(Base):
     pseudo = Column(String(255), unique=True)
     password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, server_onupdate=func.now())
 
 class Video(Base):
     __tablename__ = "video"
@@ -29,7 +29,7 @@ class Video(Base):
     title = Column(String(255), unique=True)
     description = Column(Text, nullable=True)
     created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, server_onupdate=func.now())
     id_1 = Column(Integer, ForeignKey('user.id'), nullable=False)
     
 class Commentaire(Base):
@@ -37,7 +37,7 @@ class Commentaire(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, server_onupdate=func.now())
     id_1 = Column(Integer, ForeignKey('video.id'), nullable=False)
     id_2 = Column(Integer, ForeignKey('user.id'), nullable=False)
     
