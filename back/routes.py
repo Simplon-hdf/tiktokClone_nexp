@@ -1,5 +1,8 @@
 from fastapi import APIRouter
-from back.controllers.userController import user_controller, video_controller, commentaire_controller, tag_controller
+from back.controllers.userController import UserController
+from back.controllers.videoController import VideoController
+from back.controllers.commentaireController import CommentaireController
+from back.controllers.tagController import TagController
 
 user_router = APIRouter()
 video_router = APIRouter()
