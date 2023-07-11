@@ -4,12 +4,15 @@ from models import User, engine
 from argon2 import PasswordHasher
 import jwt
 from fastapi import HTTPException
+import os
+from dotenv import load_dotenv
 
 class UserController():
 
     def __init__(self) -> None:
         self.ph = PasswordHasher()
-
+        self.secret_key = os.getenv("SECRET_KEY")
+        
     def get_users(self):
         with Session(engine) as session:
             users = session.query(User).all()
@@ -64,7 +67,7 @@ class UserController():
             "user_email": user_email,
             "user_pseudo": user_pseudo
         }
-        token = jwt.encode(payload, "your_secret_key", algorithm="HS256")
+        token = jwt.encode(payload, self.secret_key, algorithm="HS256")
         return token
 
     
