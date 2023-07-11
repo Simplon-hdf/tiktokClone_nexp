@@ -22,8 +22,10 @@ class UserController():
                 raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
             return user
 
-    def login(self, email, password):
+    def login(self, data: dict):
         with Session(engine) as session:
+            email = data["email"]
+            password = data["password"]
             user = session.query(User).filter(User.email == email).first()
             if user is None:
                 raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
@@ -52,9 +54,17 @@ class UserController():
                 session.rollback()
                 raise HTTPException(status_code=500, detail="Erreur de création de l'utilisateur")
 
-    def generate_jwt_token(self, user_id):
-        # Générer et retourner le JWT en utilisant la bibliothèque jwt
-        payload = {"user_id": user_id}
+    def generate_jwt_token(self, user_data: dict):
+        user_id = user_data["user_id"]
+        user_email = user_data["user_email"]
+        user_pseudo = user_data["user_pseudo"]
+
+        payload = {
+            "user_id": user_id,
+            "user_email": user_email,
+            "user_pseudo": user_pseudo
+        }
         token = jwt.encode(payload, "your_secret_key", algorithm="HS256")
         return token
+
     
