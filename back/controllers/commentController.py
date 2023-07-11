@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import Select
 from models import Commentaire, engine
+import jwt
 
 class CommentController():
     
@@ -13,7 +14,6 @@ class CommentController():
                 idVideo = data["idVideo"],
                 idUser = data["idUser"]       
                 )
-            )
             session.add(newCommentaire)
             session.commit()
         return commentaire
