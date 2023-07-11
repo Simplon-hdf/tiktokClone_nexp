@@ -5,7 +5,6 @@ from argon2 import PasswordHasher
 import jwt
 from fastapi import HTTPException
 import os
-from dotenv import load_dotenv
 
 class UserController():
 
