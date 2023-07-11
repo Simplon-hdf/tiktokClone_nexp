@@ -10,7 +10,7 @@ class VideoController():
         # Code pour récupérer la liste de toutes les videos
         return 'Liste des videos'
 
-    def upload_video(data:dict):
+    def upload_video(data):
         print(data)
         file: UploadFile = File(data["file"])
         file.filename = uuid.uuid4()

@@ -3,11 +3,17 @@ from controllers.userController import UserController
 from controllers.videoController import VideoController
 from controllers.commentController import CommentController
 from controllers.tagController import TagController
+from pydantic import BaseModel
 
 user_router = APIRouter()
 video_router = APIRouter()
 commentaire_router = APIRouter()
 tag_router = APIRouter()
+
+class VideoData(BaseModel):
+    file: any = None
+    title: str
+    description: str | None = None
 
 
 # Utilisateurs
@@ -28,8 +34,8 @@ def delete_users():
 
 # Vidéos
 @video_router.post('/videos/create')
-def post_videos():
-    return VideoController.upload_video()
+async def post_videos(body: VideoData):
+    return VideoController.upload_video(body)
 @video_router.get('/videos/list')
 def get_videos():
     return VideoController.get_videos()
