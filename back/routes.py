@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from back.controllers.userController import UserController
 from back.controllers.videoController import VideoController
-from back.controllers.commentaireController import CommentaireController
+from back.controllers.commentController import CommentController
 from back.controllers.tagController import TagController
 
 user_router = APIRouter()
@@ -15,58 +15,58 @@ tag_router = APIRouter()
 @user_router.post('/users/signup')
 @user_router.post('/users/create')
 def post_users():
-    return user_controller.post_users()
+    return UserController.post_users()
 @user_router.get('/users/list')
 def get_users():
-    return user_controller.get_users()
+    return UserController.get_users()
 @user_router.put('/users/update')
 def put_users():
-    return user_controller.put_users()
+    return UserController.put_users()
 @user_router.delete('/users/delete')
 def delete_users():
-    return user_controller.delete_users()
+    return UserController.delete_users()
 
 # Vidéos
 @video_router.post('/videos/create')
 def post_videos():
-    return video_controller.post_videos()
+    return VideoController.post_videos()
 @video_router.get('/videos/list')
 def get_videos():
-    return video_controller.get_videos()
+    return VideoController.get_videos()
 @video_router.put('/videos/update')
 def put_videos():
-    return video_controller.put_videos()
+    return VideoController.put_videos()
 @video_router.delete('/videos/delete')
 def delete_videos():
-    return video_controller.delete_videos()
+    return VideoController.delete_videos()
 
 # Commentaires
 @commentaire_router.post('/commentaires/create')
 def post_commentaires():
-    return commentaire_controller.post_commentaires()
+    return CommentController.post_commentaires()
 @commentaire_router.get('/commentaires/list')
 def get_commentaires():
-    return commentaire_controller.get_commentaires()
+    return CommentController.get_commentaires()
 @commentaire_router.put('/commentaires/update')
 def put_commentaires():
-    return commentaire_controller.put_commentaires()
+    return CommentController.put_commentaires()
 @commentaire_router.delete('/commentaires/delete')
 def delete_commentaires():
-    return commentaire_controller.delete_commentaires()
+    return CommentController.delete_commentaires()
 
 # Tags
 @tag_router.post('/tags/create')
 def post_tags():
-    return tag_controller.post_tags()
+    return TagController.post_tags()
 @tag_router.get('/tags/list')
 def get_tags():
-    return tag_controller.get_tags()
+    return TagController.get_tags()
 @tag_router.put('/tags/update')
 def put_tags():
-    return tag_controller.put_tags()
+    return TagController.put_tags()
 @tag_router.delete('/tags/delete')
 def delete_tags():
-    return tag_controller.delete_tags()
+    return TagController.delete_tags()
 
 
 
