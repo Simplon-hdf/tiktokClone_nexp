@@ -3,7 +3,7 @@ from sqlalchemy import Select
 from bdd import get_db
 from models import Commentaire, engine
 
-class commentController():
+class CommentController():
     def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
