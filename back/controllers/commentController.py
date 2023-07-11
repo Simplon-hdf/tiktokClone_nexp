@@ -24,28 +24,32 @@ class CommentController():
                 raise HTTPException(status_code=500, detail="Erreur de création du nouveau commentaire")
 
     def get_commentaires(self):
-        commentaires = session.query(Commentaire).all()
-        return 'Liste des commentaires'
+        with Session(engine) as session:
+            commentaires = session.query(Commentaire).all()
+            return 'Liste des commentaires'
 
     def get_commentaire(self, commentaire_id: int):
-        commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
-        if not commentaire:
-            raise HTTPException(status_code=404, detail="Commentaire not found")
-        return commentaire
+        with Session(engine) as session:
+            commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
+            if not commentaire:
+                raise HTTPException(status_code=404, detail="Commentaire not found")
+            return commentaire
 
     def update_commentaire(self, commentaire_id: int, updated_commentaire: Commentaire):
-        commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
-        if not commentaire:
-            raise HTTPException(status_code=404, detail="Commentaire not found")
+        with Session(engine) as session:
+            commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
+            if not commentaire:
+                raise HTTPException(status_code=404, detail="Commentaire not found")
         commentaire.content = updated_commentaire.content
         session.commit()
         session.refresh(commentaire)
         return commentaire
 
     def delete_commentaire(self, commentaire_id: int):
-        commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
-        if not commentaire:
-            raise HTTPException(status_code=404, detail="Commentaire not found")
+        with Session(engine) as session:
+            commentaire = session.query(Commentaire).filter(Commentaire.id == commentaire_id).first()
+            if not commentaire:
+                raise HTTPException(status_code=404, detail="Commentaire not found")
         session.delete(commentaire)
         session.commit()
         return {"message": "Commentaire deleted"}
