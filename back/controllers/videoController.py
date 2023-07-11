@@ -11,6 +11,7 @@ class VideoController():
         return 'Liste des videos'
 
     def upload_video(data:dict):
+        print(data)
         file: UploadFile = File(data["file"])
         file.filename = uuid.uuid4()
         try:

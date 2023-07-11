@@ -29,7 +29,7 @@ def delete_users():
 # Vidéos
 @video_router.post('/videos/create')
 def post_videos():
-    return VideoController.post_videos()
+    return VideoController.upload_video()
 @video_router.get('/videos/list')
 def get_videos():
     return VideoController.get_videos()
