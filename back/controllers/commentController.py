@@ -6,7 +6,7 @@ import jwt
 class CommentController():
     
     def create_commentaire(self, commentaire: Commentaire, data: dict):
-       with Session(engine) as session:
+        with Session(engine) as session:
             newCommentaire = Commentaire(
                 content = data["content"],
                 created_at = data["created_at"],
@@ -18,7 +18,7 @@ class CommentController():
             session.commit()
         return commentaire
 
-     def get_commentaires(self):
+    def get_commentaires(self):
         commentaires = session.query(Commentaire).all()
         return 'Liste des commentaires'
 
