@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from models import User, engine
 from argon2 import PasswordHasher
-import jwt
+from jose import jwt
 from fastapi import HTTPException
 import os
 
