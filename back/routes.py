@@ -10,26 +10,27 @@ user_router = APIRouter()
 video_router = APIRouter()
 commentaire_router = APIRouter()
 tag_router = APIRouter()
+user = UserController()
 
 # Utilisateurs
-@user_router.post('/users/login')
-def login():
-    pass
-@user_router.post('/users/signup')
-def signup():
-    pass
+@user_router.post('/login')
+async def login(request:Request):
+    return user.login(await request.json())
+@user_router.post('/signup')
+async def signup(request:Request):
+    return user.create_user(await request.json())
 @user_router.post('/users/create')
 def post_users():
-    return UserController.post_users()
+    return user.post_users()
 @user_router.get('/users/list')
 def get_users():
-    return UserController.get_users()
+    return user.get_users()
 @user_router.put('/users/update')
 def put_users():
-    return UserController.put_users()
+    return user.put_users()
 @user_router.delete('/users/delete')
 def delete_users():
-    return UserController.delete_users()
+    return user.delete_users()
 
 # Vidéos
 @video_router.post('/videos/create')

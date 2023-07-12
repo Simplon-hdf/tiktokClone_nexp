@@ -3,8 +3,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from models import User, engine
 from argon2 import PasswordHasher
 from jose import jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
 class UserController():
 
@@ -34,7 +36,7 @@ class UserController():
             try:
                 if self.ph.verify(user.password, password):
                     # Générer et retourner le JWT pour l'authentification
-                    token = self.generate_jwt_token(user.id)
+                    token = self.generate_jwt_token(user)
                     return {"access_token": token}
                 else:
                     raise HTTPException(status_code=401, detail="Mot de passe incorrect")
@@ -56,10 +58,10 @@ class UserController():
                 session.rollback()
                 raise HTTPException(status_code=500, detail="Erreur de création de l'utilisateur")
 
-    def generate_jwt_token(self, user_data: dict):
-        user_id = user_data["user_id"]
-        user_email = user_data["user_email"]
-        user_pseudo = user_data["user_pseudo"]
+    def generate_jwt_token(self, user_data: User):
+        user_id = user_data.id
+        user_email = user_data.email
+        user_pseudo = user_data.pseudo
 
         payload = {
             "user_id": user_id,

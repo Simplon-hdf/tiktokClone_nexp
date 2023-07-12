@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import Select
+from sqlalchemy import select
 from models import Commentaire, engine
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
