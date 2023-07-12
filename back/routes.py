@@ -3,7 +3,7 @@ from controllers.userController import UserController
 from controllers.videoController import VideoController
 from controllers.commentController import CommentController
 from controllers.tagController import TagController
-from typing import Annotated
+from typing import Annotated, Optional
 from dependency import has_access
 
 user_router = APIRouter()
@@ -36,8 +36,10 @@ def delete_users():
 
 video = VideoController()
 # Vidéos
-@video_router.post('/videos/create',
-    dependencies = PROTECTED)
+@video_router.post(
+    '/videos/create',
+    dependencies = PROTECTED
+)
 def post_video(
     file: Annotated[UploadFile, File()],
     title: Annotated[str, Form()],
@@ -50,6 +52,31 @@ def post_video(
         "description": description,
         "idUser": idUser
     })
+@video_router.delete(
+    "/videos/{id}/delete",
+    dependencies = PROTECTED
+)
+def delete_video(id):
+    return video.delete_video(id)
+@video_router.put(
+        "/videos/update",
+        dependencies = PROTECTED
+)
+def update_video(
+    id: Annotated[int, Form()],
+    file: Optional[UploadFile] = File(),
+    title: Optional[str] = Form(),
+    description: Optional[str] = Form(None)
+):
+    return video.update_video({
+        "id": id,
+        "file": file,
+        "title": title,
+        "description": description
+    })
+@video_router.get("/video/{id}")
+async def stream_video(id):
+    return await video.get_stream_video(id)
 
 # Commentaires
 @commentaire_router.post('/commentaires/create')
