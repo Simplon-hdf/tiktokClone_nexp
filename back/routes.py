@@ -1,24 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, File, Form, UploadFile
 from controllers.userController import UserController
 from controllers.videoController import VideoController
 from controllers.commentController import CommentController
 from controllers.tagController import TagController
 from pydantic import BaseModel
+from typing import Any, Annotated
 
 user_router = APIRouter()
 video_router = APIRouter()
 commentaire_router = APIRouter()
 tag_router = APIRouter()
 
-class VideoData(BaseModel):
-    file: any = None
-    title: str
-    description: str | None = None
-
-
 # Utilisateurs
 @user_router.post('/users/login')
+def login():
+    pass
 @user_router.post('/users/signup')
+def signup():
+    pass
 @user_router.post('/users/create')
 def post_users():
     return UserController.post_users()
@@ -34,8 +33,18 @@ def delete_users():
 
 # Vidéos
 @video_router.post('/videos/create')
-async def post_videos(body: VideoData):
-    return VideoController.upload_video(body)
+def post_video(
+    file: Annotated[UploadFile, File()],
+    title: Annotated[str, Form()],
+    description: Annotated[str, Form()]
+):
+    return VideoController.upload_video({
+        "file": file,
+        "title": title,
+        "description": description
+    })
+#async def post_videos(request: Request):
+#    return await VideoController.upload_video(request)
 @video_router.get('/videos/list')
 def get_videos():
     return VideoController.get_videos()

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import Select
 from models import Commentaire, engine
 from fastapi import HTTPException
-import jwt
+from sqlalchemy.exc import SQLAlchemyError
 
 class CommentController():
     
