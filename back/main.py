@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from models import engine, Base
 from routes import user_router, video_router, commentaire_router
 from fastapi.middleware.cors import CORSMiddleware

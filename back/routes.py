@@ -1,16 +1,18 @@
-from fastapi import APIRouter, Request, File, Form, UploadFile
+from fastapi import APIRouter, Request, File, Form, UploadFile, Depends
 from controllers.userController import UserController
 from controllers.videoController import VideoController
 from controllers.commentController import CommentController
 from controllers.tagController import TagController
-from pydantic import BaseModel
-from typing import Any, Annotated
+from typing import Annotated
+from dependency import has_access
 
 user_router = APIRouter()
 video_router = APIRouter()
 commentaire_router = APIRouter()
 tag_router = APIRouter()
 user = UserController()
+
+PROTECTED = [Depends(has_access)]
 
 # Utilisateurs
 @user_router.post('/login')
@@ -32,29 +34,22 @@ def put_users():
 def delete_users():
     return user.delete_users()
 
+video = VideoController()
 # Vidéos
-@video_router.post('/videos/create')
+@video_router.post('/videos/create',
+    dependencies = PROTECTED)
 def post_video(
     file: Annotated[UploadFile, File()],
     title: Annotated[str, Form()],
-    description: Annotated[str, Form()]
+    description: Annotated[str, Form()],
+    idUser: Annotated[int, Form()]
 ):
-    return VideoController.upload_video({
+    return video.upload_video({
         "file": file,
         "title": title,
-        "description": description
+        "description": description,
+        "idUser": idUser
     })
-#async def post_videos(request: Request):
-#    return await VideoController.upload_video(request)
-@video_router.get('/videos/list')
-def get_videos():
-    return VideoController.get_videos()
-@video_router.put('/videos/update')
-def put_videos():
-    return VideoController.put_videos()
-@video_router.delete('/videos/delete')
-def delete_videos():
-    return VideoController.delete_videos()
 
 # Commentaires
 @commentaire_router.post('/commentaires/create')
