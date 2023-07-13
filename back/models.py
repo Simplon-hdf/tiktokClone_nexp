@@ -1,66 +1,91 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Integer, DateTime, Text, ForeignKey, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
+import datetime
+from typing_extensions import Annotated
+from typing import List
 
 # Configurez la base de données
 SQLALCHEMY_DATABASE_URL = "sqlite:///./bdd.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+intpk = Annotated[int, mapped_column(primary_key=True)]
+timestamp_create = Annotated[datetime.datetime, mapped_column(nullable=False, default=func.CURRENT_TIMESTAMP())]
+timestamp_update = Annotated[datetime.datetime, mapped_column(nullable=True, server_onupdate=func.CURRENT_TIMESTAMP())]
 Base = declarative_base()
+
+class Based(DeclarativeBase):
+    pass
 
 
 # Définissez le modèle de données pour le compte utilisateur
-class User(Base):
+class User(Based):
     __tablename__ = "user"
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), nullable=False, unique=True)
-    pseudo = Column(String(255), unique=True)
-    password = Column(String(255), nullable=False)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, server_onupdate=func.now())
+    id: Mapped[intpk]
+    email: Mapped[str] = mapped_column(String(255), unique=True)
+    pseudo: Mapped[str] = mapped_column(String(255), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[timestamp_create]
+    updated_at: Mapped[timestamp_update]
+    videos: Mapped[List["Video"]] = relationship()
+    comments: Mapped[List["Commentaire"]] = relationship()
+    videosLiked: Mapped[List["Aime"]] = relationship()
+    videosViewed: Mapped[List["View"]] = relationship()
 
-class Video(Base):
+class Video(Based):
     __tablename__ = "video"
-    id = Column(Integer, primary_key=True, index=True)
-    url = Column(String(255), nullable=False, unique=True)
-    title = Column(String(255), unique=True)
-    description = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, server_onupdate=func.now())
-    idUser = Column(Integer, ForeignKey('user.id'), nullable=False)
+    id: Mapped[intpk]
+    url: Mapped[str] = mapped_column(String(255), unique=True)
+    title: Mapped[str] = mapped_column(String(255), unique=True)
+    description: Mapped[str] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[timestamp_create]
+    updated_at: Mapped[timestamp_update]
+    idUser: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="videos")
+    commentaires: Mapped[List["Commentaire"]] = relationship()
+    tags: Mapped[List["Contient"]] = relationship()
+    likedBy: Mapped[List["Aime"]] = relationship()
+    viewedBy: Mapped[List["View"]] = relationship()
     
-class Commentaire(Base):
+class Commentaire(Based):
     __tablename__ = "commentaire"
-    id = Column(Integer, primary_key=True, index=True)
-    content = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, server_onupdate=func.now())
-    idVideo = Column(Integer, ForeignKey('video.id'), nullable=False)
-    idUser = Column(Integer, ForeignKey('user.id'), nullable=False)
+    id: Mapped[intpk]
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[timestamp_create]
+    updated_at: Mapped[timestamp_update]
+    idVideo: Mapped[int] = mapped_column(ForeignKey("video.id"))
+    video: Mapped["Video"] = relationship(back_populates="commentaires")
+    idUser: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="comments")
     
-class Tags(Base):
+class Tags(Based):
     __tablename__ = "tags"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text, unique=True, nullable=False)
+    id: Mapped[intpk]
+    name: Mapped[str] = mapped_column(String(255), unique=True)
+    videos: Mapped[List["Contient"]] = relationship()
 
-class Aime(Base):
+class Aime(Based):
     __tablename__ = "aime"
-    id = Column(Integer, primary_key=True, index=True)
-    idUser = Column(Integer, ForeignKey('user.id'))
-    idVideo = Column(Integer, ForeignKey('video.id'))    
+    id: Mapped[intpk]
+    idUser: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="videosLiked")
+    idVideo: Mapped[int] = mapped_column(ForeignKey("video.id"))
+    video: Mapped["Video"] = relationship(back_populates="likedBy")    
     
 
-class View(Base):
+class View(Based):
     __tablename__ = "view"
-    id = Column(Integer, primary_key=True, index=True)
-    idUser = Column(Integer, ForeignKey('user.id'))
-    idVideo = Column(Integer, ForeignKey('video.id'))     
+    id: Mapped[intpk]
+    idUser: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="videosViewed")
+    idVideo: Mapped[int] = mapped_column(ForeignKey("video.id"))
+    video: Mapped["Video"] = relationship(back_populates="viewedBy")     
 
-class Contient(Base):
+class Contient(Based):
     __tablename__ = "contient"
-    id = Column(Integer, primary_key=True, index=True)
-    idTag = Column(Integer, ForeignKey('tags.id'))
-    idVideo = Column(Integer, ForeignKey('video.id'))   
+    id: Mapped[intpk]
+    idTag: Mapped[int] = mapped_column(ForeignKey("tags.id"))
+    tag: Mapped["Tags"] = relationship(back_populates="videos")
+    idVideo: Mapped[int] = mapped_column(ForeignKey("video.id"))
+    video: Mapped["Video"] = relationship(back_populates="tags")   

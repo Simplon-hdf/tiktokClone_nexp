@@ -80,6 +80,9 @@ def update_video(
 @video_router.get("/video/{id}")
 async def stream_video(id):
     return await video.get_stream_video(id)
+@video_router.get("/video/{id}/data")
+def get_data_video(id):
+    return video.get_data_video(id)
 
 # Commentaires
 @commentaire_router.post('/commentaires/create')
