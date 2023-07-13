@@ -1,13 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600;700&display=swap');
+
+/* * {
+  border: red 1px solid;
+} */
+
+:root{
+  --main-color: #F2B011;
+  --secondary-color: #FF4768;
+  --secondary-color: #FF6F89;
+  --main-black: #100010;
+  --mid-grey: #464646;
+  --mid-grey: #E8E8E8;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.6em;
+}
+
+/*--------------------BTN NORMALIZE--------------------*/
+
+.btn{
+  box-shadow: none;
+  border-radius: 5px;
+  border: none;
+  font-family:'inter', sans-serif;
+  min-width: fit-content;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-cta {
+  background-color: #F2B011;
+  font-size: 18px;
+  color: #100010;
+  padding: 0.5rem;
+}
+.btn-capsule{
+  border-radius: 2rem;
+  background: rgba(16, 0, 16, 0.75);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #FF6F89;
+  padding: 0.4rem, 1.25rem;
+}
+
+.btn-rond{
+  background-color: #F2B011;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+.plus {
+  color: #100010;
+  font-size: 24px;
+}
+
+
+/*--------------------INPUT--------------------*/
+
+.pastille{
+  background-color: #FF6F89;
+  min-width: 1.8rem;
+  min-height: 1.8rem;
+  border-radius: 50%;
+  color: #fff;
+}
+
+input {
+  font-size: 12px;
+  border-radius: 5px;
+  line-height: 1.5;
+  padding: 0.6rem;
+  border: none;
+  color: #100010;
+  background: #E8E8E8;
+}
+
+/*--------------------PROFIL--------------------*/
+
+.profile-image {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.action {
+  display: flex;
+  gap: 1rem;
+}
+.user-info {
+  bottom: 0;
+}
+
+.comment-count, .likes-count {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+/* .profil-btn {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  
+} */
