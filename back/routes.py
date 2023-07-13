@@ -31,11 +31,11 @@ def get_users():
 def get_user(id):
     return user.get_user(id)
 @user_router.put('/users/update')
-def put_users():
-    return user.put_users()
-@user_router.delete('/users/delete')
-def delete_users():
-    return user.delete_users()
+async def put_users(request:Request):
+    return user.put_users(await request.json())
+@user_router.delete('/users/{id}/delete')
+def delete_users(id):
+    return user.delete_user(id)
 
 video = VideoController()
 # Vidéos
