@@ -1,7 +1,7 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from models import Video, engine
+from models import Video, engine, User
 from fastapi import UploadFile, Security, status, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
@@ -57,13 +57,11 @@ class VideoController():
             session = Session(engine)
             query = select(Video).where(Video.id.in_([id]))
             for video in session.scalars(query):
-                print(video.url)
                 os.remove(video.url)
                 session.delete(video)
                 session.commit()
 
     def update_video(self, data: dict):
-        print(data)
         session = Session(engine)
         query = select(Video).where(Video.id.in_([data["id"]]))
         for video in session.scalars(query):
@@ -105,3 +103,13 @@ class VideoController():
                 return response
             except FileNotFoundError:
                 raise HTTPException(detail="File not found.", status_code=status.HTTP_404_NOT_FOUND)
+            
+    def get_data_video(self, id):
+        session = Session(engine)
+        query = select(Video).options(
+            joinedload(Video.user, innerjoin=True)
+        ).where(Video.id.in_([id]))
+        result = session.scalars(query)
+        video = []
+        for video in result:
+            print(video.user.pseudo)
