@@ -1,0 +1,96 @@
+<form>
+    <input type="file" id="file">
+    <button id="button">envoyer</button>
+</form>
+
+<button id="supprimer">supprimer</button><br><br>
+
+<form>
+    <input type="file" id="updatedFile">
+    <button id="btnUpdate">update</button>
+</form>
+
+<button id="getStream">getStream</button><br><br>
+<video id="stream" width="480" height="360"></video>
+
+<script>
+    let button = document.getElementById("button")
+    let btnDelete = document.getElementById("supprimer")
+    let btnUpdate = document.getElementById("btnUpdate")
+    let btnStream = document.getElementById("getStream")
+
+    let jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2VtYWlsIjoicHZlcmRpZXJlNTlAZ21haWwuY29tIiwidXNlcl9wc2V1ZG8iOiJEZWNlaXZlciJ9.Jm8WedyAyrcnBIaNBW43japbDlrrxs0W05ECpKnl_DY"
+    let url = "http://127.0.0.1:8000"
+
+    btnStream.addEventListener("click", e => {
+        e.preventDefault()
+        const video = document.getElementById("stream");
+        video.autoplay = true;
+        video.src = url+"/video/1"
+    })
+
+    btnUpdate.addEventListener("click", e => {
+        e.preventDefault()
+        let input = document.getElementById("updatedFile")
+        formData = new FormData()
+        formData.append("id", parseInt(1))
+        formData.append("file", input.files[0])
+        formData.append("title", "newTitle")
+        fetch(url+"/videos/update", {
+            method: "PUT",
+            headers: {
+                "Autorization": `Bearer ${jwt}`
+            },
+            body: formData
+        }).then(
+            response => response.json()
+        ).then(
+            success => console.log(success)
+        ).catch(
+            error => console.log(error)
+        )
+    })
+
+    button.addEventListener("click", e => {
+        e.preventDefault()
+        let input = document.getElementById("file")
+        formData = new FormData()
+        formData.append("file", input.files[0])
+        formData.append("title", "title6")
+        formData.append("description", "description")
+        formData.append("idUser", parseInt(2))
+        fetch(url+"/videos/create", {
+            method: "POST",
+            headers: {
+                "Autorization": `Bearer ${jwt}`
+            },
+            body: formData/*JSON.stringify({
+                "file": input.files[0],
+                "title": "title",
+                "description": "description"
+            })*/
+        }).then(
+            response => response.json()
+        ).then(
+            success => console.log(success)
+        ).catch(
+            error => console.log(error)
+        )
+    })
+
+    btnDelete.addEventListener("click", e => {
+        e.preventDefault()
+        fetch(url+"/videos/5/delete",{
+            method: "DELETE",
+            headers: {
+                "Autorization": `Bearer ${jwt}`
+            }
+        }).then(
+            response => response.json()
+        ).then(
+            success => console.log(success)
+        ).catch(
+            error => console.log(error)
+        )
+    })
+</script>
