@@ -27,6 +27,9 @@ def post_users():
 @user_router.get('/users/list')
 def get_users():
     return user.get_users()
+@user_router.get('/user/{id}')
+def get_user(id):
+    return user.get_user(id)
 @user_router.put('/users/update')
 def put_users():
     return user.put_users()
